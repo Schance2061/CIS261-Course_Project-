@@ -30,11 +30,11 @@ def authenticate_user(users):
                                                                                                                                         
     for user in users:
         if user.user_id == user_id and user.password == password:
-           print(f"Login successful! Welcome {user.user_id}, Role: {user.role}")
+           print(f"Login successful! Welcome {user.user_id}, Role: {user.authorization}")
            return user  # Successful login, return user and break the loop
-    print("Login successful, proceeding to task")
+    print("Invalid credentials, please try again.")
     return None
-
+ 
 # Function for Admin functionalities (allow data entry and display)
 def admin_functions():
     print("You are logged in as Admin. You can enter and view data.")
@@ -240,13 +240,58 @@ def process_records(file_name, from_date):
         display_totals(totals)
     else:
         print("No records found for the given From Date or 'All'.")
+
+# Function to process user data (you can add more processing logic here)
+def process_user_data(user_id):
+    print(f"Processing data for user ID: {user_id}")
+    # Add additional logic for processing user data here
+    # Example: fetch and display specific user data from a file or database
+    # This can be expanded based on your specific needs
+    # For example, you might want to display user-specific information
+    # or perform other tasks based on the user's role.
+
+# Updated authenticate_user function with call to process_user_data
+def authenticate_user(users):
+    user_id = input("Enter User ID: ")
+    password = input("Enter Password: ")
+                                            
+    for user in users:
+        if user.user_id == user_id and user.password == password:
+            print(f"Login successful! Welcome {user.user_id}, Role: {user.authorization}")
+                                                                                
+            # Process user data here after successful login
+            process_user_data(user.user_id)  # You can call the new function here
+                                                                                                        
+            return user  # Return the logged-in user object
+    print("Login unsuccessful. Please try again.")
+    return None
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 # Main function to execute the program
 def main():
     """Main function to execute the program."""
-    file_name = "user_data.txt"  # This file will store user login info
-    users = load_user_data(file_name)  # Load existing users
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+    # Instead of loading from a file, define your users right here:
+    users = [
+        Login("admin", "admin123", "Admin"),
+        Login("user1", "password1", "User") 
+    ]    
+    max_attempts = 3  # Set the max number of login attempts
+    attempts = 0
+    
+    while attempts < max_attempts:
+        user = authenticate_user(users)  # Authenticate user login
+        if user:  # If authentication is successful
+            if user.authorization == 'Admin':
+                admin_functions()  # Give admin access
+            elif user.authorization == 'User':
+                user_functions()  # Give user access
+            break  # Exit after successful login and action
+        else:
+            attempts += 1  # Increment attempts
+            print(f"Failed login attempt {attempts} of {max_attempts}")
+            if attempts == max_attempts:
+                print("Maximum login attempts reached. Exiting program.")
+                break  # Exit if the user reaches the max number of attempts
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
     while True:
         user = authenticate_user(users)  # Authenticate user login
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
@@ -262,4 +307,4 @@ def main():
 if __name__ == "__main__":
     main()
                                                                                                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                                                                                                                               
+                                                                                                                                                                                                                                                                                                                                                

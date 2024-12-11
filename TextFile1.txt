@@ -1,0 +1,4 @@
+admin|admin123|Admin
+user1|password1|User
+schance|Happy1|Admin
+Blake|Love321|User
